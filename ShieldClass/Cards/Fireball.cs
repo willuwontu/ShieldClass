@@ -56,7 +56,18 @@ namespace ShieldClassNamespace.Cards
         }
         protected override GameObject GetCardArt()
         {
-            return null;
+            GameObject art;
+
+            try
+            {
+                art = ShieldClass.instance.shieldHeroAssets.LoadAsset<GameObject>("C_Fireball");
+            }
+            catch
+            {
+                art = null;
+            }
+
+            return art;
         }
         protected override CardInfo.Rarity GetRarity()
         {

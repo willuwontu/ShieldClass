@@ -64,23 +64,40 @@ namespace ShieldClassNamespace
 
         private IEnumerator OnGameStart(IGameModeHandler gm)
         {
-
+            foreach (var player in PlayerManager.instance.players)
+            {
+                if (!ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.Contains(ShieldHero.ShieldHeroClass))
+                {
+                    ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.Add(ShieldHero.ShieldHeroClass);
+                }
+            }
             yield break;
         }
 
         private IEnumerator OnPlayerPickStart(IGameModeHandler gm)
         {
+            foreach (var player in PlayerManager.instance.players)
+            {
+                var cards = player.data.currentCards.ToArray();
+                if ((cards.Where(card => card.categories.Contains(ShieldHero.ShieldHeroClass)).ToArray().Length > 0) && (!cards.Select(card => card.cardName.ToLower()).ToArray().Contains("Shield Hero".ToLower())))
+                {
+                    var heroIndeces = Enumerable.Range(0, player.data.currentCards.Count()).Where((index) => player.data.currentCards[index].categories.Contains(ShieldHero.ShieldHeroClass)).ToArray();
+                    var earliest = heroIndeces.Min();
 
+                    ShieldClass.instance.StartCoroutine(ReplaceCard(player, ShieldHero.card, earliest));
+                }
+            }
+
+            yield return null;
             yield break;
         }
 
-        private IEnumerator OnPointStart(IGameModeHandler gm)
+        private IEnumerator ReplaceCard(Player player, CardInfo card, int index)
         {
-
+            yield return ModdingUtils.Utils.Cards.instance.ReplaceCard(player, index, card, "", 2f, 2f, true);
+            yield return null;
             yield break;
         }
-
-
 
         public void DebugLog(object message)
         {

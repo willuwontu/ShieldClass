@@ -11,9 +11,9 @@ namespace ShieldClassNamespace.MonoBehaviours
 {
     class BlizzardStorm_Mono : MonoBehaviour
     {
-        public float damage = 0.05f / 10f;
+        public float damage = 0.05f * 2f;
         public float range = 3f;
-        public float slow = 0.2f;
+        public float slow = 0.3f;
 
         private SpawnedAttack spawned;
 
@@ -41,19 +41,17 @@ namespace ShieldClassNamespace.MonoBehaviours
                 if (hit.GetComponent<Player>())
                 {
                     var player = hit.GetComponent<Player>();
-                    if (this.spawned && player.teamID != this.spawned.spawner.teamID)
+                    if (this.spawned && player.teamID != this.spawned.spawner.teamID && !player.data.block.IsBlocking())
                     {
-                        player.data.healthHandler.CallTakeDamage(Vector2.up * damage * (1f + (spawned.attackLevel - 1f) * 0.75f), base.transform.position, null, this.spawned.spawner, true);
+                        player.data.healthHandler.CallTakeDamage(Vector2.up * damage * (1f + (spawned.attackLevel - 1f) * 0.5f), base.transform.position, null, this.spawned.spawner, true);
                         var coldMono = player.gameObject.GetOrAddComponent<PlayerInBlizzard_Mono>();
                         coldMono.wasInStorm = new bool[] { true, true };
-                        coldMono.coldPercent += 0.05f / 6f;
+                        coldMono.coldPercent += 0.05f / 4f;
 
                         if (coldMono.coldPercent >= 1f)
                         {
                             player.data.stunHandler.AddStun(0.05f);
                         }
-
-                        player.data.view.RPC("RPCA_AddSlow", RpcTarget.All, new object[] { this.slow, false });
                     }
                 }
                 else
@@ -70,6 +68,8 @@ namespace ShieldClassNamespace.MonoBehaviours
 
         private ColorEffect colorEffect;
         private float coldLostOver = 5f;
+        private float lastCheck = 0f;
+        private Player player;
 
         public bool[] wasInStorm = new bool[] { true, true };
 
@@ -80,6 +80,11 @@ namespace ShieldClassNamespace.MonoBehaviours
 
         private void Start()
         {
+            player = this.GetComponent<Player>();
+            if (!player)
+            {
+                UnityEngine.GameObject.Destroy(this);
+            }
             InterfaceGameModeHooksManager.instance.RegisterHooks(this);
 
             colorEffect = this.gameObject.AddComponent<ColorEffect>();
@@ -90,22 +95,28 @@ namespace ShieldClassNamespace.MonoBehaviours
             if (wasInStorm[1])
             {
                 wasInStorm[1] = false;
+                lastCheck = Time.time;
             }
-            else if (wasInStorm[0])
+            else if (wasInStorm[0] && ((lastCheck + 0.05f) < Time.time))
             {
                 wasInStorm[0] = false;
             }
-            else
+            else if (!wasInStorm[0] && !wasInStorm[1])
             {
                 this.coldPercent -= TimeHandler.deltaTime / coldLostOver;
+            }
+
+            if (wasInStorm[0] || wasInStorm[1])
+            {
+                player.data.view.RPC("RPCA_AddSlow", RpcTarget.All, new object[] { Mathf.Max(0.4f, coldPercent), false });
             }
 
             colorEffect.SetColor(new Color(
                 colorEffect.GetOriginalColorMax().r * (1 - coldPercent),
                 colorEffect.GetOriginalColorMax().g + (0.7931f - colorEffect.GetOriginalColorMax().g) * coldPercent,
-                colorEffect.GetOriginalColorMax().b + (1f - colorEffect.GetOriginalColorMax().b) * coldPercent,
-                colorEffect.GetOriginalColorMax().a + (1f - colorEffect.GetOriginalColorMax().a) * coldPercent
-                ));
+                colorEffect.GetOriginalColorMax().b + (0.8f - colorEffect.GetOriginalColorMax().b) * coldPercent,
+                colorEffect.GetOriginalColorMax().a + (0.9f - colorEffect.GetOriginalColorMax().a) * coldPercent
+                )); ;
             colorEffect.ApplyColor();
 
             if (coldPercent <= 0f)

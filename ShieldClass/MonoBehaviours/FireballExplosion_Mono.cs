@@ -28,7 +28,7 @@ namespace ShieldClassNamespace.MonoBehaviours
         private void Explode()
         {
             Gun gun = spawned.spawner.data.weaponHandler.gun;
-            float damageMult = gun.damage * gun.bulletDamageMultiplier;
+            float damageMult = gun.damage * gun.bulletDamageMultiplier * 0.8f;
             damage = damageMult * 55f;
             float radius = range * base.transform.localScale.x;
 

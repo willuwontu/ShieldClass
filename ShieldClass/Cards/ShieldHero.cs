@@ -96,7 +96,7 @@ namespace ShieldClassNamespace.Cards
         }
         protected override string GetDescription()
         {
-            return "Use the power of your shield to take down foes.";
+            return "Use the power of your shield to take down foes. Gain levels by standing still or blocking enemy bullets.";
         }
         protected override GameObject GetCardArt()
         {

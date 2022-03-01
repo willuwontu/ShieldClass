@@ -102,6 +102,8 @@ namespace ShieldClassNamespace.MonoBehaviours
                                 });
                             }
 
+                            roll = UnityEngine.Random.Range(0f, 1f);
+
                             if (roll < stunChance)
                             {
                                 NetworkingManager.RPC(typeof(ElectricField_Mono), nameof(RPCA_StunPlayer), new object[] { 0.1f, person.playerID });

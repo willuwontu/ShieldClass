@@ -59,6 +59,7 @@ namespace ShieldClassNamespace.MonoBehaviours
             fireballLauncher.bulletDamageMultiplier = 0f;
             fireballLauncher.reflects = 0;
             fireballLauncher.spread = Mathf.Max(0.025f * spawnCount, fireballLauncher.spread);
+            fireballLauncher.soundImpactModifier = UnboundLib.Utils.CardManager.cards.Values.Select(card => card.cardInfo).Where(card => card.cardName.ToLower() == "EXPLOSIVE BULLET".ToLower()).First().GetComponent<Gun>().soundImpactModifier;
 
             GameObject effect = ShieldClass.instance.shieldHeroAssets.LoadAsset<GameObject>("A_Fireball");
             effect.GetComponent<SpawnObjects>().objectToSpawn[0] = fireballEffect;
@@ -75,7 +76,7 @@ namespace ShieldClassNamespace.MonoBehaviours
 
         public void OnUpgrade(int level)
         {
-            spawnCount = Mathf.CeilToInt((level + 1f)/2f);
+            spawnCount = Mathf.CeilToInt((level + 2f)/2f);
         }
 
         private void OnDestroy()

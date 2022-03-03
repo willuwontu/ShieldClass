@@ -14,11 +14,12 @@ namespace ShieldClassNamespace.Cards
 {
     class Fireball : CustomCard
     {
+        public static CardInfo card = null;
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers, Block block)
         {
             cardInfo.categories = new CardCategory[] { ShieldHero.ShieldHeroClass };
-            block.cdAdd = 0.25f;
-
+            //block.cdAdd = 0.25f;
+            cardInfo.allowMultiple = false;
             ShieldClass.instance.DebugLog($"[{ShieldClass.ModInitials}][Card] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
@@ -37,6 +38,8 @@ namespace ShieldClassNamespace.Cards
             {
                 upgrader.upgradeAction += spawnMono.OnUpgrade;
             }
+
+            spawnMono.OnUpgrade(upgrader.currentUpgradeLevel);
 
             ShieldClass.instance.DebugLog($"[{ShieldClass.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
         }
@@ -77,13 +80,13 @@ namespace ShieldClassNamespace.Cards
         {
             return new CardInfoStat[]
             {
-                new CardInfoStat()
-                {
-                    positive = false,
-                    stat = "Block CD",
-                    amount = "+0.25s",
-                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
-                },
+                //new CardInfoStat()
+                //{
+                //    positive = false,
+                //    stat = "Block CD",
+                //    amount = "+0.25s",
+                //    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
+                //},
                 new CardInfoStat()
                 {
                     positive = false,

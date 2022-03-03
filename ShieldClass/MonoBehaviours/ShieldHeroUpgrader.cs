@@ -53,6 +53,10 @@ namespace ShieldClassNamespace.MonoBehaviours
 				this.levelText = levelFrame.transform.Find("Ring/Level").gameObject.GetComponent<TextMeshProUGUI>();
 				this.levelText.text = $"{this.upgradeLevel}";
 			}
+
+			rotateImage = rotator.gameObject.GetComponentInChildren<ProceduralImage>();
+			topImage = still.gameObject.GetComponentInChildren<ProceduralImage>();
+			backRing = this.gameObject.transform.Find("Canvas/Size/BackRing").GetComponent<ProceduralImage>();
 		}
 
 		public void OnDestroy()
@@ -104,7 +108,7 @@ namespace ShieldClassNamespace.MonoBehaviours
 
 		public void OnRoundEnd()
         {
-			this.ResetStuff();
+			//this.ResetStuff();
         }
 
 		private void ResetStuff()
@@ -155,6 +159,8 @@ namespace ShieldClassNamespace.MonoBehaviours
 
 		private void Update()
 		{
+			AdjustColors(isUpgrading);
+
 			if (this.soundCounterLast < this.counter)
 			{
 				this.SoundPlay();
@@ -262,6 +268,41 @@ namespace ShieldClassNamespace.MonoBehaviours
 			base.GetComponentInParent<ChildRPC>().CallFunction("ShieldHeroUpgrade");
 		}
 
+		private void AdjustColors(bool onCooldown)
+        {
+			int index = onCooldown ? 1 : 0;
+
+			backRing.color = backRingColors[index];
+			rotateImage.color = ringColors[index];
+			topImage.color = ringColors[index];
+			fill.color = backgroundColors[index];
+			outerRing.color = ringColors[index];
+		}
+
+		private Color[] backRingColors = new Color[] 
+		{
+			new Color32(52, 122, 161, 29),
+			new Color32(161, 56, 52, 29)
+		};
+
+		private Color[] ringColors = new Color[] 
+		{
+			new Color32(0, 191, 255, 255),
+			new Color32(255, 69, 0, 255)
+		};
+
+		private Color[] backgroundColors = new Color[] 
+		{
+			new Color32(0, 84, 255, 5),
+			new Color32(255, 41, 0, 5)
+		};
+
+		private ProceduralImage backRing;
+
+		private ProceduralImage rotateImage;
+
+		private ProceduralImage topImage;
+
 		public SoundEvent soundUpgradeChargeLoop;
 
 		private bool soundChargeIsPlaying;
@@ -349,7 +390,7 @@ namespace ShieldClassNamespace.MonoBehaviours
 
 		public void OnRoundEnd()
         {
-			UnityEngine.GameObject.Destroy(this);
+			//UnityEngine.GameObject.Destroy(this);
         }
 
         public override void OnOnDestroy()
@@ -358,35 +399,4 @@ namespace ShieldClassNamespace.MonoBehaviours
 			ShieldClassNamespace.Extensions.CharacterStatModifiersExtension.GetAdditionalData(stats).extraBlockTime -= extraBlockTime;
 		}
     }
-
-	public class ClonedWeakness : ReversibleEffect, IPointStartHookHandler, IGameStartHookHandler, IBattleStartHookHandler
-    {
-		public override void OnStart()
-		{
-			InterfaceGameModeHooksManager.instance.RegisterHooks(this);
-			applyImmediately = true;
-			this.SetLivesToEffect(int.MaxValue);
-
-			characterDataModifier.health_mult = 0.7f;
-			characterDataModifier.maxHealth_mult = 0.7f;
-		}
-
-		public void OnPointStart()
-        {
-			UnityEngine.GameObject.Destroy(this);
-        }
-		public void OnGameStart()
-		{
-			UnityEngine.GameObject.Destroy(this);
-		}
-		public void OnBattleStart()
-		{
-			UnityEngine.GameObject.Destroy(this);
-		}
-
-		public override void OnOnDestroy()
-		{
-			InterfaceGameModeHooksManager.instance.RemoveHooks(this);
-		}
-	}
 }

@@ -8,6 +8,8 @@ using UnboundLib;
 using UnboundLib.Networking;
 using ShieldClassNamespace.Interfaces;
 using Photon.Pun;
+using Sonigon;
+using Sonigon.Internal;
 
 namespace ShieldClassNamespace.MonoBehaviours
 {
@@ -39,6 +41,9 @@ namespace ShieldClassNamespace.MonoBehaviours
         private GameObject particles;
         private Coroutine sizeCoroutine;
         private LineEffect lineEffect;
+        private static SoundEvent fieldSound;
+        private bool fieldSoundIsPlaying;
+        private SoundParameterIntensity soundParameterIntensity = new SoundParameterIntensity(0f, UpdateMode.Continuous);
 
         private void Start()
         {
@@ -54,6 +59,38 @@ namespace ShieldClassNamespace.MonoBehaviours
             base.transform.localScale = Vector3.zero;
             lineEffect.radius = 0f;
             particles.SetActive(false);
+
+            if (!fieldSound)
+            {
+                AudioClip sound = ShieldClass.instance.shieldHeroAssets.LoadAsset<AudioClip>("SFX_Electric_Fury_2.ogg");
+                SoundContainer soundContainer = ScriptableObject.CreateInstance<SoundContainer>();
+                soundContainer.audioClip[0] = sound;
+                fieldSound = ScriptableObject.CreateInstance<SoundEvent>();
+                fieldSound.soundContainerArray[0] = soundContainer;
+            }
+        }
+
+        private void SoundPlay()
+        {
+            bool flag = !this.fieldSoundIsPlaying;
+            if (flag)
+            {
+                this.fieldSoundIsPlaying = true;
+                SoundManager.Instance.Play(fieldSound, base.transform, new SoundParameterBase[]
+                {
+                    this.soundParameterIntensity
+                });
+            }
+        }
+
+        private void SoundStop()
+        {
+            bool flag = this.fieldSoundIsPlaying;
+            if (flag)
+            {
+                this.fieldSoundIsPlaying = false;
+                SoundManager.Instance.Stop(fieldSound, base.transform, true);
+            }
         }
 
         private void Update()
@@ -62,6 +99,10 @@ namespace ShieldClassNamespace.MonoBehaviours
             {
                 return;
             }
+
+            SoundPlay();
+
+            soundParameterIntensity.intensity = base.transform.localScale.x;
 
             float duration = this.duration + this.duration * levelScaling * level;
 
@@ -176,6 +217,7 @@ namespace ShieldClassNamespace.MonoBehaviours
             if (shrink)
             {
                 particles.SetActive(false);
+                SoundStop();
             }
 
             yield break;

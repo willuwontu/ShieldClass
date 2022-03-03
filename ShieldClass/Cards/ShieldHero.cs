@@ -35,8 +35,9 @@ namespace ShieldClassNamespace.Cards
 
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers, Block block)
         {
-            block.cdAdd = 0.25f;
+            //block.cdAdd = 0.25f;
 
+            cardInfo.allowMultiple = false;
             cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("Class") };
             ShieldClass.instance.DebugLog($"[{ShieldClass.ModInitials}][Card] {GetTitle()} Built");
         }
@@ -65,7 +66,7 @@ namespace ShieldClassNamespace.Cards
             abyssal.soundAbyssalChargeLoop = upgrader.soundUpgradeChargeLoop;
 
             upgrader.counter = 0;
-            upgrader.upgradeTime = 8f;
+            upgrader.upgradeTime = 9f;
             upgrader.timeToEmpty = 6f;
             upgrader.upgradeCooldown = 12f;
             upgrader.outerRing = abyssal.outerRing;
@@ -127,14 +128,15 @@ namespace ShieldClassNamespace.Cards
                     stat = "Block per Upgrade",
                     amount = "+1",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
-                },
-                new CardInfoStat()
-                {
-                    positive = false,
-                    stat = "Block Cooldown",
-                    amount = "+0.25s",
-                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 }
+                //,
+                //new CardInfoStat()
+                //{
+                //    positive = false,
+                //    stat = "Block Cooldown",
+                //    amount = "+0.25s",
+                //    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
+                //}
             };
         }
         protected override CardThemeColor.CardThemeColorType GetTheme()

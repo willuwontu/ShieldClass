@@ -11,6 +11,7 @@ using UnboundLib.GameModes;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 namespace ShieldClassNamespace
 {
@@ -54,16 +55,34 @@ namespace ShieldClassNamespace
 
             shieldHeroAssets = AssetUtils.LoadAssetBundleFromResources("shieldheroassets", typeof(ShieldClass).Assembly);
 
-            CustomCard.BuildCard<ShieldHero>(card => { ShieldHero.card = card; });
-            CustomCard.BuildCard<Fireball>();
-            CustomCard.BuildCard<Blizzard>();
-            CustomCard.BuildCard<ElectricFury>();
+            CustomCard.BuildCard<ShieldHero>(card => { ShieldHero.card = card; heroCards.Add(card); });
+            CustomCard.BuildCard<Fireball>(card => { Fireball.card = card; heroCards.Add(card); });
+            CustomCard.BuildCard<Blizzard>(card => { Blizzard.card = card; heroCards.Add(card); });
+            CustomCard.BuildCard<ElectricFury>(card => { ElectricFury.card = card; heroCards.Add(card); });
 
             GameModeManager.AddHook(GameModeHooks.HookGameStart, OnGameStart);
+            GameModeManager.AddHook(GameModeHooks.HookGameStart, OnPlayerPickStart);
+            GameModeManager.AddHook(GameModeHooks.HookPickStart, OnPickStart);
+
+        }
+
+        internal static List<CardInfo> heroCards = new List<CardInfo>();
+
+        internal static int picks = 0;
+
+        internal static bool picking = false;
+
+        private IEnumerator OnPickStart(IGameModeHandler gm)
+        {
+            picks++;
+
+            yield break;
         }
 
         private IEnumerator OnGameStart(IGameModeHandler gm)
         {
+            picks = 0;
+
             foreach (var player in PlayerManager.instance.players)
             {
                 if (!ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.Contains(ShieldHero.ShieldHeroClass))
@@ -71,21 +90,29 @@ namespace ShieldClassNamespace
                     ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.Add(ShieldHero.ShieldHeroClass);
                 }
             }
+
             yield break;
         }
 
         private IEnumerator OnPlayerPickStart(IGameModeHandler gm)
         {
-            foreach (var player in PlayerManager.instance.players)
+            try
             {
-                var cards = player.data.currentCards.ToArray();
-                if ((cards.Where(card => card.categories.Contains(ShieldHero.ShieldHeroClass)).ToArray().Length > 0) && (!cards.Select(card => card.cardName.ToLower()).ToArray().Contains("Shield Hero".ToLower())))
+                foreach (var player in PlayerManager.instance.players)
                 {
-                    var heroIndeces = Enumerable.Range(0, player.data.currentCards.Count()).Where((index) => player.data.currentCards[index].categories.Contains(ShieldHero.ShieldHeroClass)).ToArray();
-                    var earliest = heroIndeces.Min();
+                    var cards = player.data.currentCards.ToArray();
+                    if ((cards.Where(card => card.categories.Contains(ShieldHero.ShieldHeroClass)).ToArray().Length > 0) && (!cards.Select(card => card.cardName.ToLower()).ToArray().Contains("Shield Hero".ToLower())))
+                    {
+                        var heroIndeces = Enumerable.Range(0, player.data.currentCards.Count()).Where((index) => player.data.currentCards[index].categories.Contains(ShieldHero.ShieldHeroClass)).ToArray();
+                        var earliest = heroIndeces.Min();
 
-                    ShieldClass.instance.StartCoroutine(ReplaceCard(player, ShieldHero.card, earliest));
+                        ShieldClass.instance.StartCoroutine(ReplaceCard(player, ShieldHero.card, earliest));
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                UnityEngine.Debug.LogException(e);
             }
 
             yield return null;

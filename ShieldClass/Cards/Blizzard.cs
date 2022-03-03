@@ -71,6 +71,10 @@ namespace ShieldClassNamespace.Cards
                 });
             }
 
+            var attackLevel = blizzardObject.GetComponent<AttackLevel>();
+            attackLevel.attackLevel = upgrader.currentUpgradeLevel;
+            attackLevel.LevelUp();
+
             ShieldClass.instance.DebugLog($"[{ShieldClass.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
         }
 

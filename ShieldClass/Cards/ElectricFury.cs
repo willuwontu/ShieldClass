@@ -36,6 +36,8 @@ namespace ShieldClassNamespace.Cards
                 });
             }
 
+            electricMono.level = upgrader.currentUpgradeLevel;
+
             characterStats.objectsAddedToPlayer.Add(electric);
 
             ShieldClass.instance.DebugLog($"[{ShieldClass.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");

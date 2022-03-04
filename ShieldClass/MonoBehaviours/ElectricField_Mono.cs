@@ -43,6 +43,7 @@ namespace ShieldClassNamespace.MonoBehaviours
         private LineEffect lineEffect;
         private static SoundEvent fieldSound;
         private bool fieldSoundIsPlaying;
+        private float lastPlayed;
         private SoundParameterIntensity soundParameterIntensity = new SoundParameterIntensity(0f, UpdateMode.Continuous);
 
         private void Start()
@@ -64,6 +65,7 @@ namespace ShieldClassNamespace.MonoBehaviours
             {
                 AudioClip sound = ShieldClass.instance.shieldHeroAssets.LoadAsset<AudioClip>("SFX_Electric_Fury_2.ogg");
                 SoundContainer soundContainer = ScriptableObject.CreateInstance<SoundContainer>();
+                soundContainer.setting.volumeIntensityEnable = true;
                 soundContainer.audioClip[0] = sound;
                 fieldSound = ScriptableObject.CreateInstance<SoundEvent>();
                 fieldSound.soundContainerArray[0] = soundContainer;
@@ -72,9 +74,10 @@ namespace ShieldClassNamespace.MonoBehaviours
 
         private void SoundPlay()
         {
-            bool flag = !this.fieldSoundIsPlaying;
+            bool flag = (lastPlayed + fieldSound.soundContainerArray[0].GetLongestAudioClipLength() < Time.time);
             if (flag)
             {
+                this.lastPlayed = Time.time;
                 this.fieldSoundIsPlaying = true;
                 SoundManager.Instance.Play(fieldSound, base.transform, new SoundParameterBase[]
                 {
@@ -97,12 +100,13 @@ namespace ShieldClassNamespace.MonoBehaviours
         {
             if (!active)
             {
+                SoundStop();
                 return;
             }
 
             SoundPlay();
 
-            soundParameterIntensity.intensity = base.transform.localScale.x;
+            soundParameterIntensity.intensity = base.transform.localScale.x * Optionshandler.vol_Sfx;
 
             float duration = this.duration + this.duration * levelScaling * level;
 

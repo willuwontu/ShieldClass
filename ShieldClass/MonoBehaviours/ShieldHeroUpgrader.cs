@@ -19,6 +19,7 @@ namespace ShieldClassNamespace.MonoBehaviours
 			this.soundCounterLast = this.counter;
 			this.data = base.GetComponentInParent<CharacterData>();
 			this.data.block.BlockProjectileAction += OnBlockProjectile;
+			this.data.block.BlockAction += ResetCounterOnEcho;
 			HealthHandler healthHandler = this.data.healthHandler;
 			healthHandler.reviveAction += OnRevive;
 			base.GetComponentInParent<ChildRPC>().childRPCs.Add("ShieldHeroUpgrade", new Action(this.RPCA_Upgrade));
@@ -62,6 +63,7 @@ namespace ShieldClassNamespace.MonoBehaviours
 		public void OnDestroy()
 		{
 			this.data.block.BlockProjectileAction -= OnBlockProjectile;
+			this.data.block.BlockAction -= ResetCounterOnEcho;
 			HealthHandler healthHandler = this.data.healthHandler;
 			healthHandler.reviveAction -= OnRevive;
 			base.GetComponentInParent<ChildRPC>().childRPCs.Remove("ShieldHeroUpgrade");
@@ -262,6 +264,14 @@ namespace ShieldClassNamespace.MonoBehaviours
 				UnityEngine.Debug.LogException(e);
 			}
 		}
+
+		private void ResetCounterOnEcho(BlockTrigger.BlockTriggerType blockTrigger)
+		{
+			if (blockTrigger == BlockTrigger.BlockTriggerType.Echo)
+            {
+				this.data.block.counter = 0f;
+            }
+        }
 
 		private void OnBlockProjectile(GameObject projectile, Vector3 forward, Vector3 hitpos)
         {

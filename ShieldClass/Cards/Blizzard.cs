@@ -36,7 +36,7 @@ namespace ShieldClassNamespace.Cards
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers, Block block)
         {
             cardInfo.categories = new CardCategory[] { ShieldHero.ShieldHeroClass };
-            //block.cdAdd = 0.25f;
+            block.cdAdd = 0.25f;
             cardInfo.allowMultiple = false;
             ShieldClass.instance.DebugLog($"[{ShieldClass.ModInitials}][Card] {GetTitle()} Built");
         }
@@ -115,13 +115,13 @@ namespace ShieldClassNamespace.Cards
         {
             return new CardInfoStat[]
             {
-                //new CardInfoStat()
-                //{
-                //    positive = false,
-                //    stat = "Block CD",
-                //    amount = "+0.25s",
-                //    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
-                //},
+                new CardInfoStat()
+                {
+                    positive = false,
+                    stat = "Block CD",
+                    amount = "+0.25s",
+                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
+                },
                 new CardInfoStat()
                 {
                     positive = false,

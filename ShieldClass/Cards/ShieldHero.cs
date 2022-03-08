@@ -35,7 +35,7 @@ namespace ShieldClassNamespace.Cards
 
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers, Block block)
         {
-            //block.cdAdd = 0.25f;
+            block.cdAdd = 0.5f;
 
             cardInfo.allowMultiple = false;
             cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("Class") };
@@ -128,15 +128,14 @@ namespace ShieldClassNamespace.Cards
                     stat = "Block per Upgrade",
                     amount = "+1",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
+                },
+                new CardInfoStat()
+                {
+                    positive = false,
+                    stat = "Block Cooldown",
+                    amount = "+0.5s",
+                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 }
-                //,
-                //new CardInfoStat()
-                //{
-                //    positive = false,
-                //    stat = "Block Cooldown",
-                //    amount = "+0.25s",
-                //    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
-                //}
             };
         }
         protected override CardThemeColor.CardThemeColorType GetTheme()

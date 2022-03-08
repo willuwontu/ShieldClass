@@ -55,34 +55,18 @@ namespace ShieldClassNamespace
 
             shieldHeroAssets = AssetUtils.LoadAssetBundleFromResources("shieldheroassets", typeof(ShieldClass).Assembly);
 
-            CustomCard.BuildCard<ShieldHero>(card => { ShieldHero.card = card; heroCards.Add(card); });
-            CustomCard.BuildCard<Fireball>(card => { Fireball.card = card; heroCards.Add(card); });
-            CustomCard.BuildCard<Blizzard>(card => { Blizzard.card = card; heroCards.Add(card); });
-            CustomCard.BuildCard<ElectricFury>(card => { ElectricFury.card = card; heroCards.Add(card); });
+            CustomCard.BuildCard<ShieldHero>(card => { ShieldHero.card = card; });
+            CustomCard.BuildCard<Fireball>(card => { Fireball.card = card; });
+            CustomCard.BuildCard<Blizzard>(card => { Blizzard.card = card; });
+            CustomCard.BuildCard<ElectricFury>(card => { ElectricFury.card = card; });
 
             GameModeManager.AddHook(GameModeHooks.HookGameStart, OnGameStart);
             GameModeManager.AddHook(GameModeHooks.HookGameStart, OnPlayerPickStart);
-            GameModeManager.AddHook(GameModeHooks.HookPickStart, OnPickStart);
 
-        }
-
-        internal static List<CardInfo> heroCards = new List<CardInfo>();
-
-        internal static int picks = 0;
-
-        internal static bool picking = false;
-
-        private IEnumerator OnPickStart(IGameModeHandler gm)
-        {
-            picks++;
-
-            yield break;
         }
 
         private IEnumerator OnGameStart(IGameModeHandler gm)
         {
-            picks = 0;
-
             foreach (var player in PlayerManager.instance.players)
             {
                 if (!ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.Contains(ShieldHero.ShieldHeroClass))

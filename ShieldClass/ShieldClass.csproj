@@ -24,6 +24,9 @@
     <Reference Include="BepInEx">
       <HintPath>$(RoundsFolder)\BepInEx\core\BepInEx.dll</HintPath>
     </Reference>
+    <Reference Include="ClassesManagerReborn">
+      <HintPath>..\..\..\ClassesManagerReborn\bin\Debug\netstandard2.1\ClassesManagerReborn.dll</HintPath>
+    </Reference>
     <Reference Include="MMHOOK_Assembly-CSharp">
       <HintPath>$(RoundsFolder)\BepInEx\plugins\MMHOOK_Assembly-CSharp.dll</HintPath>
     </Reference>

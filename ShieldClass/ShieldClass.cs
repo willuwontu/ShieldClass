@@ -19,6 +19,7 @@ namespace ShieldClassNamespace
     [BepInDependency("com.willis.rounds.unbound", BepInDependency.DependencyFlags.HardDependency)]
     [BepInDependency("pykess.rounds.plugins.moddingutils", BepInDependency.DependencyFlags.HardDependency)]
     [BepInDependency("pykess.rounds.plugins.cardchoicespawnuniquecardpatch", BepInDependency.DependencyFlags.HardDependency)]
+    [BepInDependency("root.classes.manager.reborn", BepInDependency.DependencyFlags.HardDependency)]
     // Declares our mod to Bepin
     [BepInPlugin(ModId, ModName, Version)]
     // The game our mod is associated with
@@ -60,48 +61,9 @@ namespace ShieldClassNamespace
             CustomCard.BuildCard<Blizzard>(card => { Blizzard.card = card; });
             CustomCard.BuildCard<ElectricFury>(card => { ElectricFury.card = card; });
 
-            GameModeManager.AddHook(GameModeHooks.HookGameStart, OnGameStart);
-            GameModeManager.AddHook(GameModeHooks.HookGameStart, OnPlayerPickStart);
-
         }
 
-        private IEnumerator OnGameStart(IGameModeHandler gm)
-        {
-            foreach (var player in PlayerManager.instance.players)
-            {
-                if (!ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.Contains(ShieldHero.ShieldHeroClass))
-                {
-                    ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.Add(ShieldHero.ShieldHeroClass);
-                }
-            }
 
-            yield break;
-        }
-
-        private IEnumerator OnPlayerPickStart(IGameModeHandler gm)
-        {
-            try
-            {
-                foreach (var player in PlayerManager.instance.players)
-                {
-                    var cards = player.data.currentCards.ToArray();
-                    if ((cards.Where(card => card.categories.Contains(ShieldHero.ShieldHeroClass)).ToArray().Length > 0) && (!cards.Select(card => card.cardName.ToLower()).ToArray().Contains("Shield Hero".ToLower())))
-                    {
-                        var heroIndeces = Enumerable.Range(0, player.data.currentCards.Count()).Where((index) => player.data.currentCards[index].categories.Contains(ShieldHero.ShieldHeroClass)).ToArray();
-                        var earliest = heroIndeces.Min();
-
-                        ShieldClass.instance.StartCoroutine(ReplaceCard(player, ShieldHero.card, earliest));
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                UnityEngine.Debug.LogException(e);
-            }
-
-            yield return null;
-            yield break;
-        }
 
         private IEnumerator ReplaceCard(Player player, CardInfo card, int index)
         {

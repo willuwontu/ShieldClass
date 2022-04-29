@@ -9,6 +9,7 @@ using ShieldClassNamespace.MonoBehaviours;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using UnityEngine;
 using TMPro;
+using ClassesManagerReborn.Util;
 
 namespace ShieldClassNamespace.Cards
 {
@@ -17,33 +18,16 @@ namespace ShieldClassNamespace.Cards
         public static CardInfo card = null;
 
         public const string ShieldHeroClassName = "Shield Hero";
-
-        public static CardCategory ShieldHeroClass = CustomCardCategories.instance.CardCategory("ShieldHero");
-
-        public static void ShieldHeroAddClassStuff(CharacterStatModifiers characterStats)
-        {
-            ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(characterStats).blacklistedCategories.Add(CustomCardCategories.instance.CardCategory("Class"));
-            ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(characterStats).blacklistedCategories.RemoveAll((category) => category == ShieldHeroClass);
-            ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(characterStats).blacklistedCategories.RemoveAll((category) => category == CustomCardCategories.instance.CardCategory("Default"));
-        }
-
-        public static void ShieldHeroRemoveClassStuff(CharacterStatModifiers characterStats)
-        {
-            ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(characterStats).blacklistedCategories.RemoveAll((category) => category == CustomCardCategories.instance.CardCategory("Class"));
-            ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(characterStats).blacklistedCategories.Add(ShieldHeroClass);
-        }
-
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers, Block block)
         {
             block.cdAdd = 0.5f;
 
             cardInfo.allowMultiple = false;
-            cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("Class") };
+            gameObject.GetOrAddComponent<ClassNameMono>();
             ShieldClass.instance.DebugLog($"[{ShieldClass.ModInitials}][Card] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            ShieldHeroAddClassStuff(characterStats);
 
             var abyssalCard = CardManager.cards.Values.Select(card => card.cardInfo).First(c => c.name.Equals("AbyssalCountdown"));
             var statMods = abyssalCard.gameObject.GetComponentInChildren<CharacterStatModifiers>();
@@ -87,7 +71,6 @@ namespace ShieldClassNamespace.Cards
         }
         public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            ShieldHeroRemoveClassStuff(characterStats);
             ShieldClass.instance.DebugLog($"[{ShieldClass.ModInitials}][Card] {GetTitle()} removed from Player {player.playerID}");
         }
 

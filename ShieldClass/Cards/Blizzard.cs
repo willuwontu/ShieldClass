@@ -9,6 +9,7 @@ using ShieldClassNamespace.Interfaces;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using UnityEngine;
 using ShieldClassNamespace.MonoBehaviours;
+using ClassesManagerReborn.Util;
 
 namespace ShieldClassNamespace.Cards
 {
@@ -35,9 +36,9 @@ namespace ShieldClassNamespace.Cards
         }
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers, Block block)
         {
-            cardInfo.categories = new CardCategory[] { ShieldHero.ShieldHeroClass };
             block.cdAdd = 0.25f;
             cardInfo.allowMultiple = false;
+            gameObject.GetOrAddComponent<ClassNameMono>().className = ShieldHeroClass.name;
             ShieldClass.instance.DebugLog($"[{ShieldClass.ModInitials}][Card] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)

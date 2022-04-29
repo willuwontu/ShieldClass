@@ -1,6 +1,6 @@
 {
     "name": "ShieldHero",
-    "version_number": "1.0.0",
+    "version_number": "1.0.1",
     "website_url": "https://github.com/willuwontu/ShieldClass",
     "description": "A commission by SSundee that adds a new class to the game.",
     "dependencies": [

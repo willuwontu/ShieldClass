@@ -141,9 +141,10 @@ namespace ShieldClassNamespace.MonoBehaviours
 
 		private void RPCA_Upgrade()
 		{
+			this.upgradeLevel++;
+			blockModifier.additionalBlocks_add = (upgradeLevel + 1) % 2;
 			var upgrade = this.data.player.gameObject.AddComponent<ShieldHeroUpgrade>();
 			this.remainingDuration = this.upgradeCooldown;
-			this.upgradeLevel++;
 			this.levelText.text = $"{upgradeLevel}";
 
 			if (upgradeAction != null)
@@ -275,7 +276,10 @@ namespace ShieldClassNamespace.MonoBehaviours
 
 		private void OnBlockProjectile(GameObject projectile, Vector3 forward, Vector3 hitpos)
         {
-			base.GetComponentInParent<ChildRPC>().CallFunction("ShieldHeroUpgrade");
+			if (this.data.view.IsMine)
+            {
+				base.GetComponentInParent<ChildRPC>().CallFunction("ShieldHeroUpgrade");
+			}
 		}
 
 		private void AdjustColors(bool onCooldown)

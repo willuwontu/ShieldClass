@@ -9,6 +9,7 @@ using ShieldClassNamespace.Interfaces;
 using ShieldClassNamespace.Extensions;
 using ModdingUtils.Extensions;
 using System.Linq;
+using System.Collections;
 
 namespace ShieldClassNamespace.MonoBehaviours
 {
@@ -52,7 +53,7 @@ namespace ShieldClassNamespace.MonoBehaviours
 
 				this.levelFrame = upgradeFrame;
 				this.levelText = levelFrame.transform.Find("Ring/Level").gameObject.GetComponent<TextMeshProUGUI>();
-				this.levelText.text = $"{this.upgradeLevel}";
+				this.levelText.text = $"{Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).upgradeLevel}";
 			}
 
 			rotateImage = rotator.gameObject.GetComponentInChildren<ProceduralImage>();
@@ -118,9 +119,9 @@ namespace ShieldClassNamespace.MonoBehaviours
 			this.SoundStop();
 			this.remainingDuration = 0f;
 			this.counter = 0f;
-			this.upgradeLevel = 0;
+			Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).upgradeLevel = 0;
 			this.currentUpgradeLevel = 0;
-			this.levelText.text = $"{upgradeLevel}";
+			this.levelText.text = $"{Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).upgradeLevel}";
 			if (this.isUpgrading)
 			{
                 for (int i = 0; i < this.upgradeObjects.Length; i++)
@@ -135,7 +136,7 @@ namespace ShieldClassNamespace.MonoBehaviours
 
 			if (upgradeAction != null)
 			{
-				upgradeAction(upgradeLevel);
+				upgradeAction(Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).upgradeLevel);
 			}
 		}
 
@@ -143,12 +144,12 @@ namespace ShieldClassNamespace.MonoBehaviours
 		{
 			var upgrade = this.data.player.gameObject.AddComponent<ShieldHeroUpgrade>();
 			this.remainingDuration = this.upgradeCooldown;
-			this.upgradeLevel++;
-			this.levelText.text = $"{upgradeLevel}";
+			Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).upgradeLevel++;
+			this.levelText.text = $"{Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).upgradeLevel}";
 
 			if (upgradeAction != null)
             {
-				upgradeAction(upgradeLevel);
+				upgradeAction(Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).upgradeLevel);
             }
 		}
 
@@ -190,7 +191,7 @@ namespace ShieldClassNamespace.MonoBehaviours
 			{
 				if (!this.isUpgrading)
 				{
-					currentUpgradeLevel = upgradeLevel;
+					currentUpgradeLevel = Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).upgradeLevel;
 					this.isUpgrading = true;
 					//for (int i = 0; i < this.abyssalObjects.Length; i++)
 					//{
@@ -332,8 +333,6 @@ namespace ShieldClassNamespace.MonoBehaviours
 
 		public float hpMultiplier = 2f;
 
-		public int upgradeLevel = 0;
-
 		public int currentUpgradeLevel = 0;
 
 		public ProceduralImage outerRing;
@@ -408,5 +407,15 @@ namespace ShieldClassNamespace.MonoBehaviours
 			InterfaceGameModeHooksManager.instance.RemoveHooks(this);
 			ShieldClassNamespace.Extensions.CharacterStatModifiersExtension.GetAdditionalData(stats).extraBlockTime -= extraBlockTime;
 		}
+
+		public static IEnumerator StartBattleReset()
+        {
+			foreach(Player player in PlayerManager.instance.players)
+            {
+				if (!player.data.currentCards.Contains(Cards.ShieldHero.card))
+					Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).upgradeLevel = 0;
+			}
+			yield break;
+        }
     }
 }

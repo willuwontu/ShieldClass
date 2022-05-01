@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <RoundsFolder>D:\Program Files (x86)\Steam\steamapps\common\ROUNDS</RoundsFolder>
+    <RoundsFolder>F:\SteamLibrary\steamapps\common\ROUNDS</RoundsFolder>
   </PropertyGroup>
 
   <ItemGroup>
@@ -28,13 +28,13 @@
       <HintPath>..\..\..\ClassesManagerReborn\bin\Debug\netstandard2.1\ClassesManagerReborn.dll</HintPath>
     </Reference>
     <Reference Include="MMHOOK_Assembly-CSharp">
-      <HintPath>$(RoundsFolder)\BepInEx\plugins\MMHOOK_Assembly-CSharp.dll</HintPath>
+      <HintPath>$(RoundsFolder)\BepInEx\plugins\willis81808-MMHook\MMHOOK_Assembly-CSharp.dll</HintPath>
     </Reference>
     <Reference Include="ModdingUtils">
-      <HintPath>$(RoundsFolder)\BepInEx\plugins\ModdingUtils.dll</HintPath>
+      <HintPath>$(RoundsFolder)\BepInEx\plugins\Pykess-ModdingUtils\ModdingUtils.dll</HintPath>
     </Reference>
     <Reference Include="CardChoiceSpawnUniqueCardPatch">
-      <HintPath>$(RoundsFolder)\BepInEx\plugins\CardChoiceSpawnUniqueCardPatch.dll</HintPath>
+      <HintPath>$(RoundsFolder)\BepInEx\plugins\Pykess-CardChoiceSpawnUniqueCardPatch\CardChoiceSpawnUniqueCardPatch.dll</HintPath>
     </Reference>
     <Reference Include="Assembly-CSharp">
       <HintPath>$(RoundsFolder)\Rounds_Data\Managed\Assembly-CSharp.dll</HintPath>

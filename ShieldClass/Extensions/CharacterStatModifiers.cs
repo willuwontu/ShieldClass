@@ -9,10 +9,12 @@ namespace ShieldClassNamespace.Extensions
     public class CharacterStatModifiersAdditionalData
     {
         public float extraBlockTime;
+        public int upgradeLevel;
 
         public CharacterStatModifiersAdditionalData()
         {
             extraBlockTime = 0f;
+            upgradeLevel = 0;
         }
     }
     public static class CharacterStatModifiersExtension

@@ -28,7 +28,7 @@ namespace ShieldClassNamespace
     {
         private const string ModId = "com.SSundee.cards.ShieldHero";
         private const string ModName = "Shield Hero";
-        public const string Version = "1.0.0"; // What version are we on (major.minor.patch)?
+        public const string Version = "1.0.1"; // What version are we on (major.minor.patch)?
 
         internal const string ModInitials = "SH";
 

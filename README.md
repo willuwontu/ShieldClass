@@ -23,3 +23,11 @@ Adds 4 new cards for the Shield Hero class into the game. Commissioned by [SSund
 > - Blocking surrounds you with a field of lightning, damaging foes inside of it and increasing your gun's damage.
 > - Foes inside the field have a chance of being silenced and stunned.
 > - Leveling up increases the duration, the stun and silence chances, and the damage of it along with the damage boost to your gun.
+
+----
+----
+
+## V 1.0.1
+----
+- Fixed a bug where more than 1 level was gained for blocking a bullet.
+- Nerfs all around

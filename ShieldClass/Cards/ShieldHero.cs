@@ -58,6 +58,7 @@ namespace ShieldClassNamespace.Cards
             upgrader.rotator = abyssal.rotator;
             upgrader.still = abyssal.still;
             upgrader.blockModifier.additionalBlocks_add = 1;
+            upgrader.characterDataModifier.maxHealth_mult = 0.9f;
 
 
             ShieldClass.instance.ExecuteAfterFrames(5, () =>
@@ -108,8 +109,15 @@ namespace ShieldClassNamespace.Cards
                 new CardInfoStat()
                 {
                     positive = true,
-                    stat = "Block per Upgrade",
-                    amount = "+1",
+                    stat = "Blocks per Upgrade",
+                    amount = "+0.5",
+                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
+                },
+                new CardInfoStat()
+                {
+                    positive = false,
+                    stat = "HP per Upgrade",
+                    amount = "-10%",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 },
                 new CardInfoStat()

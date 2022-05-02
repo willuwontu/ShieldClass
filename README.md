@@ -27,6 +27,10 @@ Adds 4 new cards for the Shield Hero class into the game. Commissioned by [SSund
 ----
 ----
 
+## V 1.0.3
+----
+- Level is no longer lost upon taking cards that remove other cards.
+
 ## V 1.0.2
 ----
 - Compatibility with the new classes manager.

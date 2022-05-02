@@ -27,6 +27,10 @@ Adds 4 new cards for the Shield Hero class into the game. Commissioned by [SSund
 ----
 ----
 
+## V 1.0.2
+----
+- Compatibility with the new classes manager.
+
 ## V 1.0.1
 ----
 - Fixed a bug where more than 1 level was gained for blocking a bullet.

@@ -61,6 +61,7 @@ namespace ShieldClassNamespace
             CustomCard.BuildCard<Blizzard>(card => { Blizzard.card = card; });
             CustomCard.BuildCard<ElectricFury>(card => { ElectricFury.card = card; });
 
+            GameModeManager.AddHook(GameModeHooks.HookBattleStart,(gm) => MonoBehaviours.ShieldHeroUpgrade.StartBattleReset());
         }
 
 
